@@ -23,10 +23,12 @@
             --secondary: #ec4899;
             --text-main: #1f2937;
             --text-light: #6b7280;
-            --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 100%);
-            --glass-bg: rgba(255, 255, 255, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.4);
-            --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+            --bg-gradient: transparent;
+            /* 讓底層透明 */
+            --glass-bg: rgba(255, 255, 255, 0.2);
+            /* 極薄背景 */
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
 
         * {
@@ -36,35 +38,37 @@
 
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: var(--bg-gradient);
+            background: transparent;
+            /* 移除 body 背景色 */
             margin: 0;
-            padding: 16px;
+            padding: 8px;
+            /* 縮減間距 */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             color: var(--text-main);
-            /* 針對懸浮視窗稍微置中 */
             align-items: center;
         }
 
         .container {
             width: 100%;
             max-width: 360px;
-            /* 適應彈出視窗 */
             background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 16px;
+            padding: 12px;
+            /* 縮減間距 */
             box-shadow: var(--glass-shadow);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         h1 {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
+            /* 稍微縮小字體 */
             font-weight: 700;
             margin: 0;
             text-align: center;
