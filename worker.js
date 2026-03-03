@@ -72,24 +72,25 @@ export default {
                             }
 
                             if (matchPinyin) {
-                                // 將拼音加在上標，原字保留 (或直接顯示拼音)
-                                translated += " " + char + "(" + matchPinyin + ") ";
+                                // 格式化為：漢字拼音 (不加括號)
+                                translated += char + matchPinyin + " ";
                             } else {
-                                translated += char;
+                                // 若無拼音資料則保留原字並加空白
+                                translated += char + " ";
                             }
                         } else {
-                            // 若無拼音資料則保留原字
-                            translated += char;
+                            // 若無資料則保留原字並加空白
+                            translated += char + " ";
                         }
                     } else {
-                        translated += char;
+                        translated += char + " ";
                     }
                 } catch (e) {
-                    translated += char;
+                    translated += char + " ";
                 }
             }
 
-            const responseData = JSON.stringify({ result: translated.trim() });
+            const responseData = JSON.stringify({ result: sourceText + "\n" + translated.trim() });
 
             // 建構帶有正確 CORS 標頭的回傳
             const newHeaders = new Headers(corsHeaders);
