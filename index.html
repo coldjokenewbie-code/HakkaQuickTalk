@@ -360,14 +360,9 @@
                 await copyToClipboard(translatedText);
                 showToast();
             } catch (e) {
-                // 若 API 呼叫失敗，先執行模擬的 Fallback 以利測試
-                console.warn("API 呼叫失敗，改用模擬回應:", e.message);
-                const mockText = await mockApiCall(text);
-                updateResult(mockText);
-                await copyToClipboard(mockText);
-                showToast();
+                console.error("翻譯失敗:", e.message);
+                updateResult("翻譯失敗，請檢查網路連線。");
             } finally {
-                // 狀態回覆
                 btn.classList.remove('loading');
             }
         }
@@ -400,12 +395,6 @@
             }
         }
 
-        // 模擬客語雲 API 回傳邏輯 (Fallback)
-        async function mockApiCall(text) {
-            return new Promise((resolve) => {
-                setTimeout(() => resolve(`[客] ${text} (轉換成功)`), 600);
-            });
-        }
 
         // 註冊 Service Worker (PWA 核心)
         if ('serviceWorker' in navigator) {
