@@ -1,0 +1,6 @@
+name = "hakka-proxy"
+main = "worker.js"
+compatibility_date = "2024-03-03"
+
+[observability]
+enabled = true
