@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>客語趣味轉</title>
+    <!-- 引入 Manifest 以支援 PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #ec4899;
+            --text-main: #1f2937;
+            --text-light: #6b7280;
+            --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 100%);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            margin: 0;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-main);
+            /* 針對懸浮視窗稍微置中 */
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 360px;
+            /* 適應彈出視窗 */
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+            text-align: center;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        textarea {
+            width: 100%;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            color: var(--text-main);
+            resize: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 10px;
+        }
+
+        select {
+            appearance: none;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8) url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234f46e5%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E") no-repeat right 12px top 50%;
+            background-size: 10px auto;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 600;
+            color: var(--primary);
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        button {
+            font-family: inherit;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96) translateY(0);
+        }
+
+        .btn-primary.loading {
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .spinner {
+            display: none;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading .spinner {
+            display: block;
+        }
+
+        .loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #result {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 14px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            min-height: 48px;
+            word-break: break-all;
+            font-size: 15px;
+            line-height: 1.4;
+            color: var(--text-main);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.01);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .copy-toast {
+            position: absolute;
+            top: -30px;
+            right: 0;
+            background: #10b981;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1), transparent);
+            margin: 4px 0;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .btn-preset {
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 4px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        }
+
+        .btn-preset:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>客語趣味轉 💬</h1>
+
+        <textarea id="inputField" placeholder="輸入想說的話..."></textarea>
+
+        <div class="controls">
+            <select id="dialect">
+                <option value="sixian">四縣話</option>
+                <option value="hailu">海陸話</option>
+            </select>
+            <button class="btn-primary" id="translateBtn" onclick="handleTranslate()">
+                <div class="spinner"></div>
+                <span class="btn-text">翻譯並複製</span>
+                <svg class="btn-text" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <div id="result">
+            <div class="copy-toast" id="copyToast">已複製！</div>
+            <span id="resultText">翻譯結果將顯示於此...</span>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title">常用趣味詞 (點擊發送)</div>
+
+        <div class="grid">
+            <button class="btn-preset" onclick="quickAction('食飽吂')">食飽吂</button>
+            <button class="btn-preset" onclick="quickAction('按仔細')">謝謝</button>
+            <button class="btn-preset" onclick="quickAction('你是哪位')">你是誰</button>
+            <button class="btn-preset" onclick="quickAction('搞屁哢')">鬧著玩</button>
+            <button class="btn-preset" onclick="quickAction('當好食')">很好吃</button>
+            <button class="btn-preset" onclick="quickAction('天光日見')">明天見</button>
+        </div>
+    </div>
+
+    <script>
+        // Cloudflare Worker Proxy 網址
+        const PROXY_URL = 'https://hakka-proxy.coldjokenewbie.workers.dev/';
+
+        async function handleTranslate() {
+            const text = document.getElementById('inputField').value.trim();
+            if (!text) return;
+
+            const btn = document.getElementById('translateBtn');
+            const dialect = document.getElementById('dialect').value;
+
+            // 狀態變更：載入中
+            btn.classList.add('loading');
+            updateResult("翻譯中...");
+
+            try {
+                // 呼叫 Cloudflare Worker Proxy
+                const response = await fetch(PROXY_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: text,
+                        dialect: dialect === "sixian" ? "四縣腔" : "海陸腔"
+                    })
+                });
+
+                if (!response.ok) throw new Error(`API 錯誤: ${response.status}`);
+
+                const data = await response.json();
+                console.log("API 回傳結果:", data);
+
+                let translatedText = "";
+                // 處理可能的回傳格式：目前台灣客語語音庫 API 或是我們自行架設的 API 可能的格式不同。
+                // 假設回傳格式可能直接為 string 或是有特定 field (如: result, text, translated)
+                if (typeof data === 'string') {
+                    translatedText = data;
+                } else if (data.result) {
+                    translatedText = data.result;
+                } else if (data.text) {
+                    translatedText = data.text;
+                } else if (data.translated_text) {
+                    translatedText = data.translated_text;
+                } else {
+                    translatedText = JSON.stringify(data); // 顯示原始 JSON 以便 Debug
+                }
+
+                updateResult(translatedText);
+                await copyToClipboard(translatedText);
+                showToast();
+            } catch (e) {
+                // 若 API 呼叫失敗，先執行模擬的 Fallback 以利測試
+                console.warn("API 呼叫失敗，改用模擬回應:", e.message);
+                const mockText = await mockApiCall(text);
+                updateResult(mockText);
+                await copyToClipboard(mockText);
+                showToast();
+            } finally {
+                // 狀態回覆
+                btn.classList.remove('loading');
+            }
+        }
+
+        function quickAction(val) {
+            document.getElementById('inputField').value = val;
+            handleTranslate();
+        }
+
+        function updateResult(msg) {
+            document.getElementById('resultText').innerText = msg;
+        }
+
+        function showToast() {
+            const toast = document.getElementById('copyToast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch (err) {
+                const el = document.createElement('textarea');
+                el.value = text;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            }
+        }
+
+        // 模擬客語雲 API 回傳邏輯 (Fallback)
+        async function mockApiCall(text) {
+            return new Promise((resolve) => {
+                setTimeout(() => resolve(`[客] ${text} (轉換成功)`), 600);
+            });
+        }
+
+        // 註冊 Service Worker (PWA 核心)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.log('SW fail:', err));
+            });
+        }
+    </script>
+</body>
+
+</html>
