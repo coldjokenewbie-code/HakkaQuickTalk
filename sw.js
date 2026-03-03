@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hakka-quick-talk-v1';
+const CACHE_NAME = 'hakka-quick-talk-v2';
 const ASSETS = [
     './',
     './index.html',
